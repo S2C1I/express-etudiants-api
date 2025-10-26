@@ -5,7 +5,7 @@ import {
   getConversations,
   markAsRead,
 } from "../Controllers/controllerMessage.js";
-import { tokenVerification } from "../Middleware/TokenVerification.js";
+import { tokenVerification } from "../Middleware/tokenVerification.js";
 
 const routerMessage = Router();
 
