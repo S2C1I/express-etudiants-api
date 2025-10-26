@@ -7,7 +7,7 @@ import {
   updateEtudiant,
   getTotalEtudiants
 } from "../Controllers/controller.js";
-import { tokenVerification } from "../Middleware/TokenVerification.js";
+import { tokenVerification } from "../Middleware/tokenVerification.js";
 import { roleVerification } from "../Middleware/roleVerification.js";
 
 const monRouter = Router();
