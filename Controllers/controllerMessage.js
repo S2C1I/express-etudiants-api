@@ -1,6 +1,6 @@
 import Message from "../Model/Message.js";
 import User from "../Model/User.js";
-import Etudiant from "../model/Etudiant.js";
+import Etudiant from "../Model/Etudiant.js";
 
 // GET /messages/:userId - Get conversation history between logged-in user and another user
 export async function getConversation(req, res, next) {
