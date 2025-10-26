@@ -1,4 +1,4 @@
-import Etudiant from "../model/Etudiant.js";
+import Etudiant from "../Model/Etudiant.js";
 
 export async function getAllEtudiants(req, res, next) {
   try {
