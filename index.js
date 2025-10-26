@@ -104,6 +104,17 @@ app.use("/etudiants", monRouter);
 app.use("/messages", routerMessage);
 // server is created above before initializing socket.io
 
+// Simple health and root endpoints for uptime checks and quick tests
+app.get("/health", (_req, res) => {
+  res.status(200).json({ status: "ok", time: new Date().toISOString() });
+});
+
+app.get("/", (_req, res) => {
+  res
+    .status(200)
+    .send("Express Etudiants API is running. Try /health or authenticated routes like /etudiants.");
+});
+
 app.use(NotFound);
 app.use(errorHandler);
 
