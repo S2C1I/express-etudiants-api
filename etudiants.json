@@ -1,0 +1,37 @@
+[
+    {
+      "id": 1,
+      "nom": "Benali",
+      "prenom": "Ahmed",
+      "email": "ahmed.benali@example.com",
+      "matiere": "Mathématiques"
+    },
+    {
+      "id": 2,
+      "nom": "El Mansouri",
+      "prenom": "Sara",
+      "email": "sara.elmansouri@example.com",
+      "matiere": "Physique"
+    },
+    {
+      "id": 3,
+      "nom": "Amrani",
+      "prenom": "Youssef",
+      "email": "youssef.amrani@example.com",
+      "matiere": "Informatique"
+    },
+    {
+      "id": 4,
+      "nom": "Lahlou",
+      "prenom": "Fatima Zahra",
+      "email": "fatima.lahlou@example.com",
+      "matiere": "Chimie"
+    },
+    {
+      "id": 5,
+      "nom": "Chafik",
+      "prenom": "Omar",
+      "email": "omar.chafik@example.com",
+      "matiere": "Biologie"
+    }
+  ]
