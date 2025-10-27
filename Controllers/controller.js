@@ -1,4 +1,5 @@
 import Etudiant from "../Model/Etudiant.js";
+import { uploadToCloudinary } from "../Middleware/upload.js";
 
 export async function getAllEtudiants(req, res, next) {
   try {
@@ -47,10 +48,12 @@ export async function getEtudiantById(req, res, next) {
 
 export async function addEtudiant(req, res, next) {
   try {
-    // Construct proper photo URL that frontend can access
-    const photoUrl = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : null;
+    // Upload to Cloudinary if file exists
+    let photoUrl = null;
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
+      photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+    }
 
     const { id, nom, prenom, email, matiere } = req.body;
     const newEtudiant = new Etudiant({
@@ -97,10 +100,12 @@ export async function addEtudiant(req, res, next) {
 
 export async function updateEtudiant(req, res, next) {
   try {
-    // Construct photo URL if a new file was uploaded
-    const photoUrl = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : undefined; // undefined means don't update this field
+    // Upload to Cloudinary if a new file was uploaded
+    let photoUrl = undefined; // undefined means don't update this field
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
+      photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+    }
 
     // Parse matiere if it's a JSON string
     const updateData = { ...req.body };
