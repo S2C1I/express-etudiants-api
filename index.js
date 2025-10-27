@@ -9,6 +9,7 @@ import routerMessage from "./Routes/routerMessage.js";
 import cors from "cors";
 import { Server } from "socket.io";
 import http from "http";
+import apiFreeLLMProxy from "./Routes/apiFreeLLMProxy.js";
 
 // load env as early as possible
 dotenv.config();
@@ -106,6 +107,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/users", routerUser);
 app.use("/etudiants", monRouter);
 app.use("/messages", routerMessage);
+app.use("/api", apiFreeLLMProxy);
 // server is created above before initializing socket.io
 
 // Simple health and root endpoints for uptime checks and quick tests
