@@ -48,11 +48,21 @@ export async function getEtudiantById(req, res, next) {
 
 export async function addEtudiant(req, res, next) {
   try {
-    // Upload to Cloudinary if file exists
+    // Upload to Cloudinary if file exists and Cloudinary is configured
     let photoUrl = null;
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(req.file.buffer);
-      photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+      try {
+        // Check if Cloudinary is configured
+        if (process.env.CLOUDINARY_CLOUD_NAME) {
+          const uploadResult = await uploadToCloudinary(req.file.buffer);
+          photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+        } else {
+          console.warn("Cloudinary not configured - skipping image upload");
+        }
+      } catch (uploadError) {
+        console.error("Cloudinary upload failed:", uploadError.message);
+        // Continue without photo rather than failing the whole request
+      }
     }
 
     const { id, nom, prenom, email, matiere } = req.body;
@@ -100,11 +110,21 @@ export async function addEtudiant(req, res, next) {
 
 export async function updateEtudiant(req, res, next) {
   try {
-    // Upload to Cloudinary if a new file was uploaded
+    // Upload to Cloudinary if a new file was uploaded and Cloudinary is configured
     let photoUrl = undefined; // undefined means don't update this field
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(req.file.buffer);
-      photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+      try {
+        // Check if Cloudinary is configured
+        if (process.env.CLOUDINARY_CLOUD_NAME) {
+          const uploadResult = await uploadToCloudinary(req.file.buffer);
+          photoUrl = uploadResult.secure_url; // Cloudinary HTTPS URL
+        } else {
+          console.warn("Cloudinary not configured - skipping image upload");
+        }
+      } catch (uploadError) {
+        console.error("Cloudinary upload failed:", uploadError.message);
+        // Continue without updating photo rather than failing the whole request
+      }
     }
 
     // Parse matiere if it's a JSON string
