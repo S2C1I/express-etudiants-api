@@ -13,3 +13,6 @@ yarn-error.log*
 dist/
 coverage/
 .DS_Store
+
+# uploaded files (optional: uncomment if you don't want to commit uploads)
+# uploads/

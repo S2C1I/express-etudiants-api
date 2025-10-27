@@ -5,10 +5,11 @@ import {
   getAllEtudiants,
   getEtudiantById,
   updateEtudiant,
-  getTotalEtudiants
+  getTotalEtudiants,
 } from "../Controllers/controller.js";
 import { tokenVerification } from "../Middleware/tokenVerification.js";
 import { roleVerification } from "../Middleware/roleVerification.js";
+import { upload } from "../Middleware/upload.js";
 
 const monRouter = Router();
 
@@ -22,7 +23,7 @@ monRouter.get("/:id", getEtudiantById);
 
 //monRouter.use(roleVerification);
 
-monRouter.post("/", addEtudiant);
+monRouter.post("/", upload.single("file"), addEtudiant);
 
 monRouter.put("/:id", updateEtudiant);
 

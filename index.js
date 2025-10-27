@@ -99,6 +99,10 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 app.use(morgan("dev"));
+
+// Serve uploaded files statically so frontend can access them
+app.use("/uploads", express.static("uploads"));
+
 app.use("/users", routerUser);
 app.use("/etudiants", monRouter);
 app.use("/messages", routerMessage);
@@ -112,7 +116,9 @@ app.get("/health", (_req, res) => {
 app.get("/", (_req, res) => {
   res
     .status(200)
-    .send("Express Etudiants API is running. Try /health or authenticated routes like /etudiants.");
+    .send(
+      "Express Etudiants API is running. Try /health or authenticated routes like /etudiants."
+    );
 });
 
 app.use(NotFound);

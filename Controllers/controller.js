@@ -34,33 +34,49 @@ export async function getAllEtudiants(req, res, next) {
 }
 
 export async function getEtudiantById(req, res, next) {
-        try {
-          const etudiant = await Etudiant.findOne({ id: req.params.id });
-          if (!etudiant) {
-            return res.status(404).json({ message: "Étudiant non trouvé" });
-          }
-          res.status(200).json(etudiant);
-        } catch (error) {
-          next(error);
-        }
+  try {
+    const etudiant = await Etudiant.findOne({ id: req.params.id });
+    if (!etudiant) {
+      return res.status(404).json({ message: "Étudiant non trouvé" });
+    }
+    res.status(200).json(etudiant);
+  } catch (error) {
+    next(error);
+  }
 }
 
 export async function addEtudiant(req, res, next) {
   try {
-    const newEtudiant = new Etudiant(req.body);
+    // Construct proper photo URL that frontend can access
+    const photoUrl = req.file 
+      ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+      : null;
+
+    const { id, nom, prenom, email, matiere } = req.body;
+    const newEtudiant = new Etudiant({
+      id,
+      nom,
+      prenom,
+      email,
+      matiere: matiere ? JSON.parse(matiere) : [],
+      photo: photoUrl
+    });
     await newEtudiant.save();
 
-    // DEBUG: Check what's in req.user
-    console.log("req.user:", req.user);
-
-    // Emit socket notification
+    // Emit socket notification for real-time updates
     const io = req.app && req.app.get ? req.app.get("io") : null;
     if (io) {
+      // Emit specific etudiant event for your Angular listeners
+      io.emit("etudiantAdded", newEtudiant);
+      
+      // Also emit general notification
       io.emit("notification", {
         action: "add",
+        message: `Nouvel étudiant ajouté: ${newEtudiant.prenom} ${newEtudiant.nom}`,
         prenom: newEtudiant.prenom,
         nom: newEtudiant.nom,
         email: newEtudiant.email,
+        photo: newEtudiant.photoUrl,
         matiere: newEtudiant.matiere,
         timestamp: new Date(),
         modifiedBy: req.user
@@ -73,7 +89,7 @@ export async function addEtudiant(req, res, next) {
       });
     }
 
-    res.status(200).json(newEtudiant);
+    res.status(201).json(newEtudiant); // Use 201 for resource creation
   } catch (error) {
     next(error);
   }
