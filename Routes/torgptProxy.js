@@ -12,9 +12,12 @@ router.post("/torgpt", async (req, res) => {
     );
     res.json(response.data);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "TorGPT proxy error", details: error.message });
+    // Improved error logging for debugging
+    console.error("TorGPT proxy error:", error.response?.data || error.message);
+    res.status(500).json({
+      error: "TorGPT API error",
+      details: error.response?.data || error.message,
+    });
   }
 });
 
