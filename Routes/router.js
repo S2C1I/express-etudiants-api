@@ -25,7 +25,7 @@ monRouter.get("/:id", getEtudiantById);
 
 monRouter.post("/", upload.single("file"), addEtudiant);
 
-monRouter.put("/:id", updateEtudiant);
+monRouter.put("/:id", upload.single("file"), updateEtudiant);
 
 monRouter.delete("/:id", deleteEtudiant);
 
