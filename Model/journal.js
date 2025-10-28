@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "./User";
+
 
 const journalSchema = new mongoose.Schema(
     {  userId: {

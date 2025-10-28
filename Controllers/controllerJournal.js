@@ -1,4 +1,4 @@
-import Journal from "../Model/journal.js";
+import Journal from "../Model/Journal.js";
 
 export async function getAllJournals(req, res, next) {
   try {
