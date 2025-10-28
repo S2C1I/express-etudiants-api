@@ -105,7 +105,6 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/users", routerUser);
 app.use("/etudiants", monRouter);
-app.use("/messages", routerMessage);
 // server is created above before initializing socket.io
 
 // Simple health and root endpoints for uptime checks and quick tests
