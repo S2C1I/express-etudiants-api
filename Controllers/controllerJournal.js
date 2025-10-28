@@ -32,5 +32,3 @@ export async function addJournal(req, res, next) {
     next(err);
   }
 }
-
-
