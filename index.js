@@ -53,47 +53,28 @@ app.set("io", io);
 const onlineUsers = new Map(); // userId -> socketId
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  // User identifies themselves when they come online
   socket.on("userOnline", (userId) => {
     onlineUsers.set(userId, socket.id);
-    console.log(
-      `User ${userId} is now online. Total online: ${onlineUsers.size}`
-    );
-
-    // Broadcast to all clients that this user is online
     io.emit("userOnline", userId);
-
-    // Send list of all online users to the newly connected user
     socket.emit("onlineUsers", Array.from(onlineUsers.keys()));
   });
 
-  // Listen for chat messages (kept for backward compatibility)
   socket.on("chat-message", (data) => {
-    // Broadcast to all clients or specific room
     io.emit("chat-message", data);
   });
 
-  // User typing indicator
   socket.on("typing", (data) => {
     socket.broadcast.emit("typing", data);
   });
 
-  // Handle disconnect
   socket.on("disconnect", () => {
-    // Find which user disconnected
     for (const [userId, socketId] of onlineUsers.entries()) {
       if (socketId === socket.id) {
         onlineUsers.delete(userId);
-        console.log(
-          `User ${userId} went offline. Total online: ${onlineUsers.size}`
-        );
         io.emit("userOffline", userId);
         break;
       }
     }
-    console.log("User disconnected:", socket.id);
   });
 });
 
