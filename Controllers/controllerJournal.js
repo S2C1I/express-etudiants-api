@@ -1,11 +1,16 @@
 import Journal from "../Model/journal.js";
+import mongoose from "mongoose";
 
 export async function getAllJournals(req, res, next) {
   try {
     const { userId, etudiantId } = req.query;
     const filter = {};
-    if (userId) filter.userId = userId;
-    if (etudiantId) filter.etudiantId = etudiantId;
+    if (userId && typeof userId === "string" && userId.length === 24) {
+      filter.userId = new mongoose.Types.ObjectId(userId);
+    }
+    if (etudiantId && typeof etudiantId === "string" && etudiantId.length === 24) {
+      filter.etudiantId = new mongoose.Types.ObjectId(etudiantId);
+    }
     const journals = await Journal.find(filter)
       .populate("userId", "prenom nom email")
       .populate("etudiantId", "nom prenom email")
@@ -28,8 +33,7 @@ export async function addJournal(req, res, next) {
       typeof etudiantId === "string" &&
       etudiantId.length === 24
     ) {
-      // Basic check for ObjectId length
-      validEtudiantId = etudiantId;
+      validEtudiantId = new mongoose.Types.ObjectId(etudiantId);
     }
     const journal = new Journal({
       userId,
@@ -39,7 +43,8 @@ export async function addJournal(req, res, next) {
     });
     await journal.save();
     res.status(201).json(journal);
-  } catch (err) {
+  }
+  catch (err) {
     next(err);
   }
 }
