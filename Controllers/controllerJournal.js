@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 export async function getAllJournals(_req, res, next) {
   try {
     const journals = await Journal.find({})
-      .populate("userId", "prenom nom email")
-      .populate("etudiantId", "nom prenom email") // Ensure 'etudiantId' matches the Journal schema field and ref
+      .populate({ path: "userId", select: "prenom nom email" })
+      .populate({ path: "etudiantId", select: "nom prenom email" })
       .sort({ timestamp: -1 });
     res.status(200).json(journals);
   } catch (err) {
