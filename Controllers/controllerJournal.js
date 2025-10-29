@@ -5,10 +5,10 @@ export async function getAllJournals(req, res, next) {
   try {
     const { userId, etudiantId } = req.query;
     const filter = {};
-    if (userId && typeof userId === "string" && userId.length === 24) {
+    if (userId && mongoose.isValidObjectId(userId)) {
       filter.userId = new mongoose.Types.ObjectId(userId);
     }
-    if (etudiantId && typeof etudiantId === "string" && etudiantId.length === 24) {
+    if (etudiantId && mongoose.isValidObjectId(etudiantId)) {
       filter.etudiantId = new mongoose.Types.ObjectId(etudiantId);
     }
     const journals = await Journal.find(filter)
@@ -28,11 +28,7 @@ export async function addJournal(req, res, next) {
     const userId = req.user.id; // Use 'id' from JWT payload
     // Ensure etudiantId is a valid ObjectId or null
     let validEtudiantId = null;
-    if (
-      etudiantId &&
-      typeof etudiantId === "string" &&
-      etudiantId.length === 24
-    ) {
+    if (etudiantId && mongoose.isValidObjectId(etudiantId)) {
       validEtudiantId = new mongoose.Types.ObjectId(etudiantId);
     }
     const journal = new Journal({
@@ -43,8 +39,7 @@ export async function addJournal(req, res, next) {
     });
     await journal.save();
     res.status(201).json(journal);
-  }
-  catch (err) {
+  } catch (err) {
     next(err);
   }
 }
