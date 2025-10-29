@@ -19,6 +19,7 @@ export async function getAllJournals(req, res, next) {
 export async function addJournal(req, res, next) {
   try {
     const { actionType, etudiantId, ipAdress } = req.body;
+    console.log("[Journal POST req.body]", req.body); // Log incoming payload
     const userId = req.user.id; // Use 'id' from JWT payload
     const journal = new Journal({
       userId,
