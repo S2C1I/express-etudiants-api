@@ -3,15 +3,7 @@ import mongoose from "mongoose";
 
 export async function getAllJournals(req, res, next) {
   try {
-    const { userId, etudiantId } = req.query;
-    const filter = {};
-    if (userId && mongoose.isValidObjectId(userId)) {
-      filter.userId = new mongoose.Types.ObjectId(userId);
-    }
-    if (etudiantId && mongoose.isValidObjectId(etudiantId)) {
-      filter.etudiantId = new mongoose.Types.ObjectId(etudiantId);
-    }
-    const journals = await Journal.find(filter)
+    const journals = await Journal.find({})
       .populate("userId", "prenom nom email")
       .populate("etudiantId", "nom prenom email")
       .sort({ timestamp: -1 });
