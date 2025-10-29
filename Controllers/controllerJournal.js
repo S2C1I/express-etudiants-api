@@ -1,9 +1,18 @@
 import Journal from "../Model/journal.js";
 import mongoose from "mongoose";
 
-export async function getAllJournals(_req, res, next) {
+// GET all journals, optionally filtered by userId or etudiantId
+export async function getAllJournals(req, res, next) {
   try {
-    const journals = await Journal.find({})
+    const { userId, etudiantId } = req.query;
+    const filter = {};
+    if (userId && mongoose.isValidObjectId(userId)) {
+      filter.userId = new mongoose.Types.ObjectId(userId);
+    }
+    if (etudiantId && mongoose.isValidObjectId(etudiantId)) {
+      filter.etudiantId = new mongoose.Types.ObjectId(etudiantId);
+    }
+    const journals = await Journal.find(filter)
       .populate({ path: "userId", select: "prenom nom email" })
       .populate({ path: "etudiantId", select: "nom prenom email" })
       .sort({ timestamp: -1 });
@@ -13,12 +22,11 @@ export async function getAllJournals(_req, res, next) {
   }
 }
 
+// POST a new journal entry
 export async function addJournal(req, res, next) {
   try {
     const { actionType, etudiantId, ipAdress } = req.body;
-    console.log("[Journal POST req.body]", req.body); // Log incoming payload
-    const userId = req.user.id; // Use 'id' from JWT payload
-    // Ensure etudiantId is a valid ObjectId or null
+    const userId = req.user.id;
     let validEtudiantId = null;
     if (etudiantId && mongoose.isValidObjectId(etudiantId)) {
       validEtudiantId = new mongoose.Types.ObjectId(etudiantId);
