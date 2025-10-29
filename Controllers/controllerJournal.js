@@ -21,10 +21,20 @@ export async function addJournal(req, res, next) {
     const { actionType, etudiantId, ipAdress } = req.body;
     console.log("[Journal POST req.body]", req.body); // Log incoming payload
     const userId = req.user.id; // Use 'id' from JWT payload
+    // Ensure etudiantId is a valid ObjectId or null
+    let validEtudiantId = null;
+    if (
+      etudiantId &&
+      typeof etudiantId === "string" &&
+      etudiantId.length === 24
+    ) {
+      // Basic check for ObjectId length
+      validEtudiantId = etudiantId;
+    }
     const journal = new Journal({
       userId,
       actionType,
-      etudiantId: etudiantId || null,
+      etudiantId: validEtudiantId,
       ipAdress: ipAdress || req.ip,
     });
     await journal.save();
