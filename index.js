@@ -106,3 +106,4 @@ app.use(NotFound);
 app.use(errorHandler);
 
 export { io, app, server };
+export default app;

@@ -25,6 +25,7 @@ etudiantSchema.pre("save", async function (next) {
   next();
 });
 
-const Etudiant = mongoose.model("Etudiant", etudiantSchema);
+const Etudiant =
+  mongoose.models.Etudiant || mongoose.model("Etudiant", etudiantSchema);
 
 export default Etudiant;
